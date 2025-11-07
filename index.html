@@ -1,40 +1,110 @@
 <!doctype html>
-<html lang="pl">
+<html lang="pl" class="h-full bg-gray-900 text-gray-100">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Plan Posiłków</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Plan Posiłków — Dashboard</title>
+  <script src="https://unpkg.com/alpinejs@3.16.1/dist/cdn.min.js" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/custom.css">
 </head>
-<body>
-<nav class="topbar">
-  <div class="brand">Plan Posiłków</div>
-  <div class="navlinks">
-    <a href="meals.html">Meals Library</a>
-    <a href="planer.html">Weekly Planner</a>
-    <a href="shopping.html">Shopping List</a>
-  </div>
-</nav>
+<body class="min-h-screen">
+  <nav class="bg-gradient-to-r from-green-600 to-green-400 text-gray-900 p-4">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="font-bold text-lg">Plan Posiłków</div>
+      <div class="space-x-4">
+        <a href="meals.html" class="font-semibold">Meals Library</a>
+        <a href="planer.html" class="font-semibold">Weekly Planner</a>
+        <a href="shopping.html" class="font-semibold">Shopping List</a>
+      </div>
+    </div>
+  </nav>
 
-<main class="container">
-  <h1>Witaj w Plan Posiłków</h1>
-  <p class="lead">Zarządzaj przepisami, twórz tygodniowy jadłospis i wygeneruj listę zakupów. Kliknij poniżej, aby zacząć.</p>
-  <div class="cta-row">
-    <a class="btn" href="meals.html">Przejdź do biblioteki przepisów</a>
-    <a class="btn outline" href="planer.html">Otwórz planer tygodniowy</a>
-  </div>
-  <section class="info">
-    <h3>Jak to działa</h3>
-    <ol>
-      <li>Przeglądaj gotowe przepisy w bibliotece.</li>
-      <li>W planerze (Pon–Pt) przypisz śniadanie, obiad i kolację.</li>
-      <li>Wygeneruj listę zakupów — wszystkie składniki z planu zbryzuje się w jedną listę bez duplikatów.</li>
-    </ol>
-  </section>
-</main>
+  <main class="max-w-6xl mx-auto p-6">
+    <header class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-extrabold">Dashboard — Dzisiaj</h1>
+      <div class="text-sm text-gray-300">Projekt: <span class="font-semibold text-green-400">Babilon2k</span></div>
+    </header>
 
-<footer class="footer">© Plan Posiłków</footer>
-<script src="script.js"></script>
+    <section x-data="dashboard()" class="grid lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 bg-gray-800 rounded-xl p-4 shadow-md">
+        <h2 class="font-semibold text-xl mb-2">Wybrany plan na dziś</h2>
+        <template x-if="!hasAny">
+          <p class="text-gray-400">Brak przypisanych posiłków na dziś. Otwórz planer i przypisz śniadanie, obiad i kolację.</p>
+        </template>
+
+        <div class="space-y-3" x-show="hasAny">
+          <template x-for="(slot,i) in ['Śniadanie','Obiad','Kolacja']" :key="i">
+            <div class="p-3 bg-gray-700 rounded-lg flex items-start justify-between hover:shadow-[0_0_18px_#00c46a1a] transition">
+              <div>
+                <div class="text-sm text-gray-300" x-text="slot"></div>
+                <div class="font-medium" x-text="mealsForToday[i]?.title || 'Brak'"></div>
+                <div class="text-xs text-gray-400 mt-1" x-text="mealsForToday[i]?.macroText || ''"></div>
+              </div>
+              <div class="text-right">
+                <div class="text-sm text-green-400 font-semibold" x-text="mealsForToday[i]?.macro?.kcal ? mealsForToday[i].macro.kcal + ' kcal' : ''"></div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <aside class="bg-gray-800 rounded-xl p-4 shadow-md">
+        <h3 class="font-semibold text-lg mb-2">Podsumowanie</h3>
+        <div class="bg-gray-700 rounded p-3">
+          <div class="text-sm text-gray-400">Kalorie i makro</div>
+          <div class="mt-3 font-semibold" x-text="summaryText">0 kcal</div>
+        </div>
+
+        <div class="mt-4 space-y-2">
+          <a href="planer.html" class="block w-full text-center py-2 bg-green-500 rounded text-gray-900 font-semibold hover:shadow-[0_0_18px_#00c46a1a]">Otwórz planer</a>
+          <a href="meals.html" class="block w-full text-center py-2 border border-gray-700 rounded text-gray-200">Przeglądaj przepisy</a>
+        </div>
+      </aside>
+    </section>
+
+    <section class="mt-8 bg-gray-800 rounded-xl p-4">
+      <h3 class="font-semibold mb-2">Szybkie akcje</h3>
+      <div class="flex gap-3">
+        <button onclick="location.href='planer.html'" class="px-4 py-2 bg-green-500 rounded font-semibold hover:shadow-[0_0_18px_#00c46a1a]">Otwórz planer</button>
+        <button onclick="location.href='shopping.html'" class="px-4 py-2 border rounded border-gray-700">Przejdź do listy zakupów</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center text-sm text-gray-400 py-6">Projekt: Babilon2k</footer>
+
+<script>
+function dashboard(){
+  return {
+    mealsForToday: [null,null,null],
+    hasAny: false,
+    summaryText: '0 kcal',
+    async init(){
+      try{
+        const planRaw = localStorage.getItem('plan_posilkow_v2');
+        const mealsRaw = localStorage.getItem('meals_cache_v2');
+        const meals = mealsRaw ? JSON.parse(mealsRaw) : [];
+        const plan = planRaw ? JSON.parse(planRaw) : null;
+        const jsd = new Date().getDay();
+        let dayIndex = jsd - 1;
+        if(dayIndex < 0 || dayIndex > 4) dayIndex = 0;
+        if(plan && plan[dayIndex]){
+          for(let s=0;s<3;s++){
+            const mi = plan[dayIndex][s];
+            if(mi !== null && meals[mi]){
+              this.mealsForToday[s] = meals[mi];
+            }
+          }
+        }
+        this.hasAny = this.mealsForToday.some(m=>m);
+        let kcal=0, protein=0, fat=0, carbs=0;
+        this.mealsForToday.forEach(m=>{ if(m && m.macro){ kcal+=Number(m.macro.kcal)||0; protein+=Number(m.macro.protein)||0; fat+=Number(m.macro.fat)||0; carbs+=Number(m.macro.carbs)||0; }});
+        this.summaryText = `${Math.round(kcal)} kcal | ${Math.round(protein)}B | ${Math.round(fat)}T | ${Math.round(carbs)}W`;
+      }catch(e){ console.error(e); }
+    }
+  }
+}
+</script>
 </body>
 </html>

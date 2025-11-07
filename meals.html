@@ -1,259 +1,286 @@
-<!-- meals.html - library of meals -->
-<div class="meals-wrap">
-  <div class="controls">
-    <input id="search" placeholder="Szukaj..." />
-    <select id="filter-section">
+<!doctype html>
+<html lang="pl" class="h-full bg-gray-900 text-gray-100">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Meals Library — Plan Posiłków</title>
+  <script src="https://unpkg.com/alpinejs@3.16.1/dist/cdn.min.js" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+<nav class="bg-gradient-to-r from-green-600 to-green-400 text-gray-900 p-4">
+  <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <div class="font-bold text-lg">Plan Posiłków</div>
+    <div class="space-x-4">
+      <a href="meals.html" class="font-semibold">Meals Library</a>
+      <a href="planer.html" class="font-semibold">Weekly Planner</a>
+      <a href="shopping.html" class="font-semibold">Shopping List</a>
+    </div>
+  </div>
+</nav>
+
+<main class="max-w-6xl mx-auto p-6" x-data="mealsPage()">
+  <header class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-extrabold">Biblioteka przepisów</h1>
+    <div class="text-sm text-gray-300">Projekt: <span class="font-semibold text-green-400">Babilon2k</span></div>
+  </header>
+
+  <div class="mb-4 flex gap-3">
+    <input x-model="q" type="text" placeholder="Szukaj..." class="flex-1 bg-gray-800 text-gray-100 rounded p-2" @input.debounce="renderFiltered()" />
+    <select x-model="filter" @change="renderFiltered()" class="bg-gray-800 p-2 rounded">
       <option value="all">Wszystkie</option>
       <option value="sniadania">Śniadania</option>
       <option value="obiady">Obiady</option>
       <option value="kolacje">Kolacje</option>
     </select>
+    <button @click="openAddModal" class="px-3 py-2 bg-green-500 rounded hover:shadow-[0_0_18px_#00c46a1a]">Dodaj przepis</button>
   </div>
 
-  <div class="grid-meals">
-    <div class="meal" data-category="sniadania" data-macro="506|28|9|77">
-      <h3>FIT OWSIANKA (3 porcje + białko x3)</h3>
-      <p><a href="https://www.facebook.com/reel/776682824773023" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki:</strong><br/>
-      450g skyra waniliowego<br/>
-      240g banana<br/>
-      210g borówek<br/>
-      150g płatków owsianych<br/>
-      150g mleka proteinowego (np. Łaciate lub zwykłe)<br/>
-      30g masła orzechowego</p>
-      <div class="icon-row">🔥 <span class="kcal">506 kcal</span> · 🥩 28g B · 🧈 9g T · 🌾 77g W</div>
-      <p class="macro">Makro (1 porcja): 506 kcal | 28B | 9T | 77W</p>
-    </div>
-
-    <div class="meal" data-category="sniadania" data-macro="489|34|12|55">
-      <h3>TWARÓG Z OWSIANKĄ I OWOCAMI (2 porcje)</h3>
-      <p><a href="https://www.facebook.com/reel/1731586187503102" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki:</strong><br/>
-      250g twarogu chudego<br/>
-      100g płatków owsianych<br/>
-      100g skyra waniliowego<br/>
-      30g masła orzechowego<br/>
-      100g jabłka<br/>
-      70g borówek</p>
-      <div class="icon-row">🔥 <span class="kcal">489 kcal</span> · 🥩 34g B · 🧈 12g T · 🌾 55g W</div>
-      <p class="macro">Makro (1 porcja): 489 kcal | 34B | 12T | 55,5W</p>
-    </div>
-
-    <div class="meal" data-category="sniadania" data-macro="560|34|13|77">
-      <h3>GRANOLA Z OWOCAMI (3 porcje + białko)</h3>
-      <p><a href="https://www.facebook.com/reel/811277777957404" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki:</strong><br/>
-      675g skyra naturalnego<br/>
-      240g banana<br/>
-      120g płatków owsianych<br/>
-      60g miodu<br/>
-      30g migdałów lub innych orzechów<br/>
-      30g gorzkiej czekolady</p>
-      <div class="icon-row">🔥 <span class="kcal">560 kcal</span> · 🥩 34g B · 🧈 13g T · 🌾 77g W</div>
-      <p class="macro">Makro (1 porcja): 560 kcal | 34B | 13T | 77W</p>
-    </div>
-
-    <div class="meal" data-category="obiady" data-macro="658|62|25|40">
-      <h3>DOMOWE QURRITO (2 porcje)</h3>
-      <p><a href="https://www.facebook.com/reel/634158566093149" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki:</strong><br/>
-      300g piersi z kurczaka<br/>
-      2 tortille<br/>
-      50g cebuli czerwonej<br/>
-      2 ogórki kiszone<br/>
-      80g sera cheddar<br/>
-      60g sosu BBQ<br/>
-      5g oliwy z oliwek<br/>
-      20g natki pietruszki<br/>
-      4g przyprawy do kurczaka<br/>
-      3g papryki słodkiej<br/>
-      3g czosnku granulowanego</p>
-      <div class="icon-row">🔥 <span class="kcal">658 kcal</span> · 🥩 62g B · 🧈 25g T · 🌾 40g W</div>
-      <p class="macro">Makro (1 porcja): 658 kcal | 62B | 25T | 40W</p>
-    </div>
-
-    <div class="meal" data-category="obiady" data-macro="745|0|0|0">
-      <h3>SPICY CHIPOTLE CHICKEN MAC &amp; CHEESE (2 porcje)</h3>
-      <p><a href="https://www.facebook.com/reel/1362733485405255" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki:</strong><br/>
-      170g makaronu (dowolny)<br/>
-      400g piersi z kurczaka<br/>
-      2 łyżeczki oliwy z oliwek<br/>
-      Przyprawy: sól, pieprz, papryka, czosnek, chili<br/>
-      250ml mleka<br/>
-      80ml wody z gotowania makaronu<br/>
-      60g serka śmietankowego light<br/>
-      40g mozzarelli light<br/>
-      30g papryczek chipotle</p>
-      <div class="icon-row">🔥 <span class="kcal">~745 kcal</span></div>
-      <p class="macro">Makro (1 porcja): ~745 kcal</p>
-    </div>
-
-    <div class="meal" data-category="obiady" data-macro="597|59|16|52">
-      <h3>HONEY GARLIC CHICKEN MAC &amp; CHEESE (4 porcje)</h3>
-      <p><a href="https://www.facebook.com/reel/831846830014165" target="_blank" rel="noopener">Link do przepisu</a></p>
-
-    <div class="meal" data-category="obiady" data-macro="642|49|15|74">
-      <h3>KREMOWY MAKARON Z PIECZONYCH POMIDORÓW 🍅 (3 porcje)</h3>
-      <p><strong>Składniki:</strong><br/>
-      500g pomidorów koktajlowych<br/>
-      300g piersi z indyka<br/>
-      1 cebula<br/>
-      1 główka czosnku<br/>
-      15g oliwy z oliwek<br/>
-      60g parmezanu<br/>
-      200g serka wiejskiego<br/>
-      240g makaronu spaghetti<br/>
-      Sól, pieprz do smaku</p>
-      <div class="icon-row">🔥 <span class="kcal">642 kcal</span> · 🥩 49g B · 🧈 15g T · 🌾 74g W</div>
-      <p class="macro">Makro (1 porcja): 642 kcal | 49B | 15T | 74W</p>
-    </div>
-
-    <div class="meal" data-category="obiady" data-macro="650|59|18|55">
-      <h3>TANDOORI CHICKEN Z FRYTKAMI I COLESLAW (3 porcje)</h3>
-      <p><a href="https://www.facebook.com/reel/1292576325669451" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki:</strong><br/>
-      750 g udek z kurczaka bez kości, bez skóry<br/>
-      2 łyżeczki tandoori masala (z solą)<br/>
-      1 łyżeczka czarnego pieprzu<br/>
-      2 łyżeczki wędzonej papryki<br/>
-      2 łyżeczki czosnku w proszku<br/>
-      1¼ łyżeczki kuminu<br/>
-      1¼ łyżeczki kolendry mielonej<br/>
-      3 łyżeczki (15 ml) oliwy z oliwek<br/>
-      60 g jogurtu 0%<br/>
-      Sok z ½ cytryny</p>
-      <div class="icon-row">🔥 <span class="kcal">~650 kcal</span> · 🥩 59g B · 🧈 18g T · 🌾 55g W</div>
-      <p class="macro">Makro (1 porcja): ~650 kcal | 59 g białka | 18 g tłuszczu | 55 g węglowodanów</p>
-    </div>
-
-    <div class="meal" data-category="obiady" data-macro="390|34|4|54">
-      <h3>SWEET CHILLI BUŁECZKI Z KURCZAKIEM (6 sztuk)</h3>
-      <p><a href="https://www.facebook.com/reel/813051294695853" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki (6 bułeczek):</strong><br/>
-      450 g piersi z kurczaka<br/>
-      1 łyżeczka czosnku w proszku<br/>
-      1 łyżeczka cebuli w proszku<br/>
-      1 łyżeczka papryki wędzonej<br/>
-      Sól i pieprz do smaku<br/></p>
-      <div class="icon-row">🔥 <span class="kcal">~390 kcal</span> · 🥩 34g B · 🧈 4g T · 🌾 54g W</div>
-      <p class="macro">Makro (1 bułeczka): ~390 kcal | 34 g białka | 4 g tłuszczu | 54 g węglowodanów</p>
-    </div>
-
-    <div class="meal" data-category="obiady" data-macro="526|48|15|50">
-      <h3>SWEET CHILLI CHICKEN WRAP (4 porcje)</h3>
-      <p><a href="https://www.facebook.com/reel/1492171535547146" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki:</strong><br/>
-      600g piersi z kurczaka<br/>
-      1 czerwona papryka<br/>
-      1/2 czerwonej cebuli<br/>
-      40g jalapeño<br/>
-      50g szpinaku<br/>
-      5 łyżek sosu słodko-pikantnego<br/>
-      100g serka śmietankowego light<br/>
-      100g sera meksykańskiego<br/>
-      2 łyżki przyprawy Chinese Five Spice<br/>
-      4 tortille</p>
-      <div class="icon-row">🔥 <span class="kcal">526 kcal</span> · 🥩 48g B · 🧈 15g T · 🌾 50g W</div>
-      <p class="macro">Makro (1 wrap): 526 kcal | 48B | 15T | 50W</p>
-    </div>
-
-    <div class="meal" data-category="obiady" data-macro="495|50|3|68">
-      <h3>KOREAN POPCORN CHICKEN (4 porcje)</h3>
-      <p><a href="https://www.facebook.com/reel/2914726892067748" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki - kurczak:</strong><br/>
-      800g piersi z kurczaka<br/>
-      1 łyżka pieprzu<br/>
-      20ml sosu sojowego<br/>
-      1 jajko<br/>
-      40g skrobi kukurydzianej<br/></p>
-      <div class="icon-row">🔥 <span class="kcal">495 kcal</span> · 🥩 50g B · 🧈 3g T · 🌾 68g W</div>
-      <p class="macro">Makro (1 porcja): 495 kcal | 50B | 3T | 68W</p>
-    </div>
-
-    <div class="meal" data-category="obiady" data-macro="630|56|10|81">
-      <h3>KURCZAK BBQ Z RYŻEM I SURÓWKĄ (3 porcje)</h3>
-      <p><a href="https://www.facebook.com/reel/1293584192489290" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki:</strong><br/>
-      600g piersi z kurczaka<br/>
-      210g ryżu<br/>
-      80g sosu BBQ<br/>
-      10g oliwy<br/>
-      150g skyra naturalnego<br/>
-      30g majonezu light<br/>
-      400g kapusty czerwonej<br/>
-      100g cebuli<br/>
-      Przyprawy: papryka wędzona, czosnek, sól, pieprz</p>
-      <div class="icon-row">🔥 <span class="kcal">630 kcal</span> · 🥩 56g B · 🧈 10g T · 🌾 81g W</div>
-      <p class="macro">Makro (1 porcja): 630 kcal | 56B | 10T | 81W</p>
-    </div>
-
-    <div class="meal" data-category="obiady" data-macro="630|80|13|45">
-      <h3>INDYK W SOSIE SEROWYM (3 porcje)</h3>
-      <p><a href="https://www.facebook.com/reel/4978113622414295" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki:</strong><br/>
-      900g indyka<br/>
-      150g kaszy bulgur<br/>
-      200g serka wiejskiego<br/>
-      40g sera Grana Padano<br/>
-      30g sosu sriracha<br/>
-      30g sosu BBQ<br/>
-      200ml mleka owsianego<br/>
-      4 ząbki czosnku<br/>
-      Przyprawy: papryka słodka, papryka ostra, czosnek, sól, imbir (po 1 łyżeczce)</p>
-      <div class="icon-row">🔥 <span class="kcal">630 kcal</span> · 🥩 80g B · 🧈 13g T · 🌾 45g W</div>
-      <p class="macro">Makro (1 porcja): 630 kcal | 80B | 13T | 45W</p>
-    </div>
-
-    <div class="meal" data-category="obiady" data-macro="340|31|5|43">
-      <h3>SKYROWE CHLEBKI Z KURCZAKIEM BBQ I SEREM 🐔 (8 sztuk)</h3>
-      <p><em>Link: (brak – można dodać później)</em></p>
-      <p><strong>Składniki - kurczak:</strong><br/>
-      600g piersi z kurczaka<br/>
-      1 łyżeczka soli<br/>
-      1 łyżeczka pieprzu<br/>
-      1 łyżeczka papryki wędzonej<br/>
-      1 łyżeczka czosnku granulowanego<br/>
-      1/2 łyżeczki kuminu<br/>
-      120g sosu barbecue<br/>
-      Olej do smażenia</p>
-      <div class="icon-row">🔥 <span class="kcal">340 kcal</span> · 🥩 31g B · 🧈 5g T · 🌾 43g W</div>
-      <p class="macro">Makro (1 sztuka): 340 kcal | 31B | 5T | 43W</p>
-    </div>
-
-    <div class="meal" data-category="kolacje" data-macro="700|60|25|55">
-      <h3>TOSTY Z TUŃCZYKIEM I JAJKIEM (2 porcje)</h3>
-      <p><a href="https://www.facebook.com/reel/1584986405657294" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki:</strong><br/>
-      4 kromki chleba żytniego (ok. 160g)<br/>
-      200g tuńczyka w sosie własnym<br/>
-      3 jajka<br/>
-      100g skyra naturalnego<br/>
-      15g majonezu light<br/>
-      30g cebuli czerwonej<br/>
-      15g szczypiorku<br/>
-      10g oliwy z oliwek<br/>
-      Sól, pieprz, czosnek granulowany</p>
-      <div class="icon-row">🔥 <span class="kcal">700 kcal</span> · 🥩 60g B · 🧈 25g T · 🌾 55g W</div>
-      <p class="macro">Makro (1 porcja): 700 kcal | 60B | 25T | 55W</p>
-    </div>
-
-    <div class="meal" data-category="kolacje" data-macro="695|52|27|55">
-      <h3>WRAPY Z ŁOSOSIEM I TWAROGIEM (2 porcje)</h3>
-      <p><a href="https://www.facebook.com/reel/1896231645598702" target="_blank" rel="noopener">Link do przepisu</a></p>
-      <p><strong>Składniki:</strong><br/>
-      2 tortille pełnoziarniste<br/>
-      200g łososia wędzonego<br/>
-      200g twarogu półtłustego<br/>
-      100g skyra naturalnego<br/>
-      60g ogórka<br/>
-      60g sałaty<br/>
-      20g koperku<br/>
-      10g oliwy z oliwek<br/>
-      Przyprawy: pieprz, sok z cytryny</p>
-      <div class="icon-row">🔥 <span class="kcal">695 kcal</span> · 🥩 52g B · 🧈 27g T · 🌾 55g W</div>
-      <p class="macro">Makro (1 porcja): 695 kcal | 52B | 27T | 55W</p>
-    </div>
-
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <template x-for="meal in filtered" :key="meal.index">
+      <div class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:shadow-[0_0_18px_#00c46a1a] transition cursor-pointer"
+           @click="toggleSelect(meal)"
+           :class="{'ring-2 ring-green-500/40': isSelected(meal)}">
+        <div class="flex justify-between items-start">
+          <h3 class="text-lg font-semibold" x-text="meal.title"></h3>
+          <div class="text-sm text-gray-400" x-text="meal.category"></div>
+        </div>
+        <p class="text-sm text-gray-300 mt-2" x-text="shortIngredients(meal)"></p>
+        <div class="mt-3 flex items-center justify-between">
+          <div class="text-sm text-green-400 font-semibold" x-text="meal.macro.kcal + ' kcal'"></div>
+          <div class="text-xs text-gray-400" x-text="'B:'+meal.macro.protein+' T:'+meal.macro.fat+' W:'+meal.macro.carbs"></div>
+        </div>
+      </div>
+    </template>
   </div>
+
+  <!-- add modal -->
+  <div x-show="showAdd" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50" x-cloak>
+    <div class="bg-gray-800 rounded-lg p-4 w-full max-w-2xl">
+      <h3 class="font-semibold mb-2">Dodaj nowy przepis</h3>
+      <div class="grid grid-cols-1 gap-2">
+        <input x-model="new.title" placeholder="Tytuł" class="p-2 bg-gray-700 rounded" />
+        <select x-model="new.category" class="p-2 bg-gray-700 rounded">
+          <option value="sniadania">Śniadania</option>
+          <option value="obiady">Obiady</option>
+          <option value="kolacje">Kolacje</option>
+        </select>
+        <input x-model="new.macroK" placeholder="kcal" class="p-2 bg-gray-700 rounded" />
+        <input x-model="new.macroP" placeholder="białko" class="p-2 bg-gray-700 rounded" />
+        <input x-model="new.macroF" placeholder="tłuszcz" class="p-2 bg-gray-700 rounded" />
+        <input x-model="new.macroC" placeholder="węglowodany" class="p-2 bg-gray-700 rounded" />
+        <textarea x-model="new.ingredients" placeholder="Składniki (oddzielone nową linią)" class="p-2 bg-gray-700 rounded"></textarea>
+        <div class="flex justify-end gap-2 mt-2">
+          <button @click="showAdd=false" class="px-3 py-2 border rounded">Anuluj</button>
+          <button @click="addNew()" class="px-3 py-2 bg-green-500 rounded">Dodaj</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-8 text-sm text-gray-400">Projekt: Babilon2k</footer>
+</main>
+
+<script>
+function mealsPage(){
+  return {
+    meals: [],
+    filtered: [],
+    q: '',
+    filter: 'all',
+    selected: new Set(),
+    showAdd: false,
+    new: {title:'', category:'sniadania', macroK:0, macroP:0, macroF:0, macroC:0, ingredients:''},
+    init(){
+      const cached = localStorage.getItem('meals_cache_v2');
+      if(cached){ this.meals = JSON.parse(cached); this.renderFiltered(); return; }
+      const nodes = Array.from(document.querySelectorAll('.meal-raw'));
+      this.meals = nodes.map((n, idx)=>{
+        const title = n.querySelector('h3').innerText.trim();
+        const category = (n.dataset.category||'').toLowerCase();
+        const macroRaw = n.dataset.macro || '';
+        const [k,p,f,c] = macroRaw.split('|').map(x=>x?Number(x):0);
+        const ingEl = n.querySelector('p.ingredients');
+        const ingredientsText = ingEl ? ingEl.innerText.replace(/Składniki: ?/i,'').trim() : '';
+        return {index: idx, title, category, macro: {kcal:k, protein:p, fat:f, carbs:c}, ingredientsText, html: n.innerHTML};
+      });
+      localStorage.setItem('meals_cache_v2', JSON.stringify(this.meals));
+      this.renderFiltered();
+    },
+    renderFiltered(){
+      const q = this.q.trim().toLowerCase();
+      this.filtered = this.meals.filter(m => {
+        const catOk = this.filter==='all' || m.category.includes(this.filter);
+        const qOk = !q || m.title.toLowerCase().includes(q) || (m.ingredientsText||'').toLowerCase().includes(q);
+        return catOk && qOk;
+      });
+    },
+    shortIngredients(m){
+      return (m.ingredientsText||'').split('\n').slice(0,2).join(' • ');
+    },
+    toggleSelect(m){
+      if(this.selected.has(m.index)) this.selected.delete(m.index);
+      else this.selected.add(m.index);
+      localStorage.setItem('selected_meals_v2', JSON.stringify(Array.from(this.selected)));
+      localStorage.setItem('meals_cache_v2', JSON.stringify(this.meals));
+    },
+    isSelected(m){ return this.selected.has(m.index); },
+    openAddModal(){ this.showAdd=true; },
+    addNew(){
+      const idx = this.meals.length;
+      const m = { index: idx, title: this.new.title, category: this.new.category, macro: {kcal: Number(this.new.macroK)||0, protein: Number(this.new.macroP)||0, fat: Number(this.new.macroF)||0, carbs: Number(this.new.macroC)||0}, ingredientsText: this.new.ingredients };
+      this.meals.push(m);
+      localStorage.setItem('meals_cache_v2', JSON.stringify(this.meals));
+      this.showAdd=false;
+      this.new = {title:'', category:'sniadania', macroK:0, macroP:0, macroF:0, macroC:0, ingredients:''};
+      this.renderFiltered();
+    }
+  }
+}
+document.addEventListener('alpine:init', ()=>{});
+</script>
+
+<div style="display:none">
+
+  <div class="meal-raw" data-category="sniadania" data-macro="506|28|9|77">
+    <h3>FIT OWSIANKA (3 porcje + białko x3)</h3>
+    <p class="ingredients">Składniki:
+450g skyra waniliowego
+240g banana
+210g borówek
+150g płatków owsianych
+150g mleka proteinowego
+30g masła orzechowego</p>
+  </div>
+  <div class="meal-raw" data-category="sniadania" data-macro="489|34|12|55">
+    <h3>TWARÓG Z OWSIANKĄ I OWOCAMI (2 porcje)</h3>
+    <p class="ingredients">Składniki:
+250g twarogu chudego
+100g płatków owsianych
+100g skyra waniliowego
+30g masła orzechowego
+100g jabłka
+70g borówek</p>
+  </div>
+  <div class="meal-raw" data-category="sniadania" data-macro="560|34|13|77">
+    <h3>GRANOLA Z OWOCAMI (3 porcje + białko)</h3>
+    <p class="ingredients">Składniki:
+675g skyra naturalnego
+240g banana
+120g płatków owsianych
+60g miodu
+30g migdałów
+30g gorzkiej czekolady</p>
+  </div>
+  <div class="meal-raw" data-category="obiady" data-macro="658|62|25|40">
+    <h3>DOMOWE QURRITO (2 porcje)</h3>
+    <p class="ingredients">Składniki:
+300g piersi z kurczaka
+2 tortille
+50g cebuli czerwonej
+2 ogórki kiszone
+80g sera cheddar
+60g sosu BBQ
+5g oliwy z oliwek</p>
+  </div>
+  <div class="meal-raw" data-category="obiady" data-macro="745|0|0|0">
+    <h3>SPICY CHIPOTLE CHICKEN MAC &amp; CHEESE (2 porcje)</h3>
+    <p class="ingredients">Składniki:
+170g makaronu
+400g piersi z kurczaka
+250ml mleka
+60g serka</p>
+  </div>
+  <div class="meal-raw" data-category="obiady" data-macro="597|59|16|52">
+    <h3>HONEY GARLIC CHICKEN MAC &amp; CHEESE (4 porcje)</h3>
+    <p class="ingredients">Składniki:
+800g piersi z kurczaka
+30g masła
+30g miodu
+300ml mleka
+160g serka Philadelphia
+220g makaronu</p>
+  </div>
+  <div class="meal-raw" data-category="obiady" data-macro="642|49|15|74">
+    <h3>KREMOWY MAKARON Z PIECZONYCH POMIDORÓW 🍅 (3 porcje)</h3>
+    <p class="ingredients">Składniki:
+500g pomidorów koktajlowych
+300g piersi z indyka
+1 cebula
+1 główka czosnku
+200g serka wiejskiego
+240g makaronu</p>
+  </div>
+  <div class="meal-raw" data-category="obiady" data-macro="650|59|18|55">
+    <h3>TANDOORI CHICKEN Z FRYTKAMI I COLESLAW (3 porcje)</h3>
+    <p class="ingredients">Składniki:
+750g udek z kurczaka
+750g ziemniaków
+240g kapusty
+180g marchwi
+60g jogurtu</p>
+  </div>
+  <div class="meal-raw" data-category="obiady" data-macro="390|34|4|54">
+    <h3>SWEET CHILLI BUŁECZKI Z KURCZAKIEM (6 sztuk)</h3>
+    <p class="ingredients">Składniki:
+450g piersi z kurczaka
+przyprawy, miód, sriracha
+400g jogurtu, 400g mąki</p>
+  </div>
+  <div class="meal-raw" data-category="obiady" data-macro="526|48|15|50">
+    <h3>SWEET CHILLI CHICKEN WRAP (4 porcje)</h3>
+    <p class="ingredients">Składniki:
+600g piersi z kurczaka
+1 papryka
+4 tortille
+100g serka śmietankowego</p>
+  </div>
+  <div class="meal-raw" data-category="obiady" data-macro="495|50|3|68">
+    <h3>KOREAN POPCORN CHICKEN (4 porcje)</h3>
+    <p class="ingredients">Składniki:
+800g piersi z kurczaka
+skrobia kukurydziana
+sos sojowy</p>
+  </div>
+  <div class="meal-raw" data-category="obiady" data-macro="630|56|10|81">
+    <h3>KURCZAK BBQ Z RYŻEM I SURÓWKĄ (3 porcje)</h3>
+    <p class="ingredients">Składniki:
+600g piersi z kurczaka
+210g ryżu
+80g sosu BBQ
+400g kapusty czerwonej</p>
+  </div>
+  <div class="meal-raw" data-category="obiady" data-macro="630|80|13|45">
+    <h3>INDYK W SOSIE SEROWYM (3 porcje)</h3>
+    <p class="ingredients">Składniki:
+900g indyka
+150g kaszy bulgur
+200g serka wiejskiego</p>
+  </div>
+  <div class="meal-raw" data-category="obiady" data-macro="340|31|5|43">
+    <h3>SKYROWE CHLEBKI Z KURCZAKIEM BBQ I SEREM 🐔 (8 sztuk)</h3>
+    <p class="ingredients">Składniki:
+600g piersi z kurczaka
+400g mąki
+420g skyra
+160g mozzarelli</p>
+  </div>
+  <div class="meal-raw" data-category="kolacje" data-macro="700|60|25|55">
+    <h3>TOSTY Z TUŃCZYKIEM I JAJKIEM (2 porcje)</h3>
+    <p class="ingredients">Składniki:
+4 kromki chleba żytniego
+200g tuńczyka
+3 jajka</p>
+  </div>
+  <div class="meal-raw" data-category="kolacje" data-macro="695|52|27|55">
+    <h3>WRAPY Z ŁOSOSIEM I TWAROGIEM (2 porcje)</h3>
+    <p class="ingredients">Składniki:
+2 tortille
+200g łososia wędzonego
+200g twarogu</p>
+  </div>
+
 </div>
+</body>
+</html>

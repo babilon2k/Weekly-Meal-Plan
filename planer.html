@@ -1,26 +1,184 @@
 <!doctype html>
-<html lang="pl">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Planer — Plan Posiłków</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css"></head><body>
-<nav class="topbar"><div class="brand">Plan Posiłków</div><div class="navlinks"><a href="meals.html">Meals Library</a><a href="planer.html">Weekly Planner</a><a href="shopping.html">Shopping List</a></div></nav>
-<main class="planner-wrap">
-  <h2>Plan tygodnia (Pon–Pt)</h2>
-  <div class="planner-grid" id="plannerGrid">
-    <div class="col-head"></div>
-    <div class="col-head">Pon</div><div class="col-head">Wt</div><div class="col-head">Śr</div><div class="col-head">Czw</div><div class="col-head">Pt</div>
-    <div class="col-head small">Śniadanie</div>
+<html lang="pl" class="h-full bg-gray-900 text-gray-100">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Planer — Plan Posiłków</title>
+  <script src="https://unpkg.com/alpinejs@3.16.1/dist/cdn.min.js" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+<nav class="bg-gradient-to-r from-green-600 to-green-400 text-gray-900 p-4">
+  <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <div class="font-bold text-lg">Plan Posiłków</div>
+    <div class="space-x-4">
+      <a href="meals.html" class="font-semibold">Meals Library</a>
+      <a href="planer.html" class="font-semibold">Weekly Planner</a>
+      <a href="shopping.html" class="font-semibold">Shopping List</a>
+    </div>
   </div>
-  <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
-    <div class="small">Kliknij pole, by przypisać posiłek. Podsumowania pokazują kalorie i makro na dzień.</div>
-    <div><button id="savePlanBtn" class="btn">Zapisz plan</button> <button id="exportBtn" class="btn">🛒 Generuj listę zakupów</button></div>
+</nav>
+
+<main class="max-w-6xl mx-auto p-6" x-data="plannerApp()">
+  <header class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-extrabold">Planer (Pon–Pt)</h1>
+    <div class="text-sm text-gray-300">Projekt: <span class="font-semibold text-green-400">Babilon2k</span></div>
+  </header>
+
+  <div class="mb-4 flex justify-between items-center">
+    <div class="text-sm text-gray-400">Kliknij pole by przypisać przepis. Zapis odbywa się lokalnie.</div>
+    <div class="flex gap-3">
+      <button @click="savePlan" class="px-3 py-2 bg-green-500 rounded hover:shadow-[0_0_18px_#00c46a1a]">Zapisz plan</button>
+      <button @click="exportShopping" class="px-3 py-2 bg-green-500 rounded hover:shadow-[0_0_18px_#00c46a1a]">🛒 Generuj listę zakupów</button>
+    </div>
   </div>
+
+  <div class="overflow-x-auto">
+    <div class="grid grid-cols-[140px_repeat(5,1fr)] gap-4 items-start">
+      <div></div>
+      <template x-for="d in ['Pon','Wt','Śr','Czw','Pt']" :key="d">
+        <div class="text-center font-semibold text-gray-300 py-2" x-text="d"></div>
+      </template>
+
+      <div class="font-semibold text-sm text-gray-400 py-2">Śniadanie</div>
+      <template x-for="day in 0..4">
+        <div class="slot bg-gray-800 rounded p-3 cursor-pointer hover:shadow-[0_0_18px_#00c46a1a]" @click="openSlot(day,0)">
+          <div class="text-sm text-gray-400">Śniadanie</div>
+          <div class="font-medium mt-2" x-text="getMealTitle(day,0)"></div>
+        </div>
+      </template>
+
+      <div class="font-semibold text-sm text-gray-400 py-2">Obiad</div>
+      <template x-for="day in 0..4">
+        <div class="slot bg-gray-800 rounded p-3 cursor-pointer hover:shadow-[0_0_18px_#00c46a1a]" @click="openSlot(day,1)">
+          <div class="text-sm text-gray-400">Obiad</div>
+          <div class="font-medium mt-2" x-text="getMealTitle(day,1)"></div>
+        </div>
+      </template>
+
+      <div class="font-semibold text-sm text-gray-400 py-2">Kolacja</div>
+      <template x-for="day in 0..4">
+        <div class="slot bg-gray-800 rounded p-3 cursor-pointer hover:shadow-[0_0_18px_#00c46a1a]" @click="openSlot(day,2)">
+          <div class="text-sm text-gray-400">Kolacja</div>
+          <div class="font-medium mt-2" x-text="getMealTitle(day,2)"></div>
+        </div>
+      </template>
+
+      <div class="font-semibold text-sm text-gray-400 py-2">Podsumowanie</div>
+      <template x-for="day in 0..4">
+        <div class="bg-gray-800 rounded p-3">
+          <div class="text-sm text-gray-400">Dziennie</div>
+          <div class="font-semibold mt-2" x-text="daySummary(day)"></div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <div x-show="showModal" x-cloak class="fixed inset-0 bg-black/60 flex items-start justify-center p-4 z-50">
+    <div class="bg-gray-800 rounded-lg w-full max-w-3xl p-4">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-semibold">Wybierz posiłek</h3>
+        <button @click="showModal=false" class="px-3 py-1 border rounded">Zamknij</button>
+      </div>
+      <div class="flex gap-2 mb-3">
+        <input x-model="q" @input.debounce="renderMeals" placeholder="Szukaj..." class="flex-1 p-2 bg-gray-700 rounded" />
+        <select x-model="filter" @change="renderMeals" class="p-2 bg-gray-700 rounded">
+          <option value="all">Wszystkie</option>
+          <option value="sniadania">Śniadania</option>
+          <option value="obiady">Obiady</option>
+          <option value="kolacje">Kolacje</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-80 overflow-auto">
+        <template x-for="m in modalMeals" :key="m.index">
+          <div class="p-3 bg-gray-700 rounded hover:shadow-[0_0_18px_#00c46a1a] cursor-pointer" @click="assignMeal(m.index)">
+            <div class="flex justify-between items-start">
+              <div><div class="font-semibold" x-text="m.title"></div><div class="text-xs text-gray-400" x-text="m.category"></div></div>
+              <div class="text-sm text-green-400 font-semibold" x-text="m.macro.kcal + ' kcal'"></div>
+            </div>
+            <div class="text-sm text-gray-300 mt-2" x-text="m.ingredientsText.split('\n').slice(0,2).join(' • ')"></div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-8 text-sm text-gray-400">Projekt: Babilon2k</footer>
 </main>
-<div class="modal" id="mealModal">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><strong>Wybierz posiłek</strong><div><button id="closeModal" class="btn ghost">Zamknij</button></div></div>
-  <div class="search-row"><input id="modalSearch" placeholder="Szukaj..." style="flex:1"/><select id="modalFilter"><option value="all">Wszystkie</option><option value="sniadania">Śniadania</option><option value="obiady">Obiady</option><option value="kolacje">Kolacje</option></select></div>
-  <div id="modalMeals"></div>
-</div>
-<script src="script.js"></script>
-<script>window.addEventListener('DOMContentLoaded',()=>{if(window.initPlanner) window.initPlanner({days:5});});</script>
-</body></html>
+
+<script>
+function plannerApp(){
+  return {
+    meals: [],
+    plan: null,
+    showModal:false,
+    modalDay:0, modalSlot:0,
+    modalMeals: [],
+    q:'', filter:'all',
+    init(){
+      const cached = localStorage.getItem('meals_cache_v2');
+      if(cached) this.meals = JSON.parse(cached);
+      const raw = localStorage.getItem('plan_posilkow_v2');
+      if(raw) this.plan = JSON.parse(raw);
+      else this.plan = Array.from({length:5}, ()=> [null,null,null]);
+      this.renderMeals();
+    },
+    openSlot(day,slot){
+      this.modalDay = day; this.modalSlot = slot; this.showModal=true;
+      this.renderMeals();
+    },
+    renderMeals(){
+      const q = this.q.trim().toLowerCase();
+      this.modalMeals = this.meals.filter(m => {
+        const catOk = this.filter==='all' || m.category.includes(this.filter);
+        const qOk = !q || m.title.toLowerCase().includes(q) || (m.ingredientsText||'').toLowerCase().includes(q);
+        return catOk && qOk;
+      });
+    },
+    assignMeal(mealIndex){
+      this.plan[this.modalDay][this.modalSlot] = mealIndex;
+      this.showModal=false;
+      this.savePlan();
+    },
+    getMealTitle(day,slot){
+      const mi = this.plan[day][slot];
+      if(mi===null || mi===undefined) return 'Brak';
+      return this.meals[mi] ? this.meals[mi].title : 'Brak';
+    },
+    savePlan(){
+      localStorage.setItem('plan_posilkow_v2', JSON.stringify(this.plan));
+      alert('Plan zapisany lokalnie');
+    },
+    daySummary(d){
+      let kcal=0, p=0, f=0, c=0;
+      for(let s=0;s<3;s++){
+        const mi = this.plan[d][s];
+        if(mi!==null && this.meals[mi]){
+          const m = this.meals[mi].macro;
+          kcal += Number(m.kcal)||0; p += Number(m.protein)||0; f += Number(m.fat)||0; c += Number(m.carbs)||0;
+        }
+      }
+      return `${Math.round(kcal)} kcal | ${Math.round(p)}B | ${Math.round(f)}T | ${Math.round(c)}W`;
+    },
+    exportShopping(){
+      const used = new Set();
+      for(let d=0; d<this.plan.length; d++) for(let s=0;s<3;s++){ const mi = this.plan[d][s]; if(mi!==null) used.add(mi); }
+      if(used.size===0){ alert('Plan jest pusty.'); return; }
+      let ingredients = [];
+      used.forEach(idx=>{
+        const m = this.meals[idx];
+        if(!m) return;
+        const lines = m.ingredientsText.split('\n').map(x=>x.trim()).filter(Boolean);
+        ingredients.push(...lines);
+      });
+      const norm = ingredients.map(s=>s.replace(/\s+/g,' ').trim()).filter(Boolean);
+      const unique = Array.from(new Set(norm.map(s=>s.toLowerCase()))).map(s=> norm.find(x=>x.toLowerCase()===s) || s );
+      localStorage.setItem('plan_shopping_items', JSON.stringify(unique));
+      window.open('shopping.html','_blank');
+    }
+  }
+}
+</script>
+</body>
+</html>

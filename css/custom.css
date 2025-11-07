@@ -1,0 +1,4 @@
+
+:root{--green:#00c46a}
+body{background:linear-gradient(180deg,#0b0f10,#0f1720);}
+.slot:hover, .meal-card:hover, .meal:hover { box-shadow: 0 8px 28px rgba(0,196,106,0.12); transform: translateY(-4px); }
