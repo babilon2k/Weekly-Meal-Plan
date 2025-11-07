@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Planer — Plan Posiłków</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body>
+<nav class="topbar"><div class="brand">Plan Posiłków</div><div class="navlinks"><a href="meals.html">Meals Library</a><a href="planer.html">Weekly Planner</a><a href="shopping.html">Shopping List</a></div></nav>
+<main class="planner-wrap">
+  <h2>Plan tygodnia (Pon–Pt)</h2>
+  <div class="planner-grid" id="plannerGrid">
+    <div class="col-head"></div>
+    <div class="col-head">Pon</div><div class="col-head">Wt</div><div class="col-head">Śr</div><div class="col-head">Czw</div><div class="col-head">Pt</div>
+    <div class="col-head small">Śniadanie</div>
+  </div>
+  <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
+    <div class="small">Kliknij pole, by przypisać posiłek. Podsumowania pokazują kalorie i makro na dzień.</div>
+    <div><button id="savePlanBtn" class="btn">Zapisz plan</button> <button id="exportBtn" class="btn">🛒 Generuj listę zakupów</button></div>
+  </div>
+</main>
+<div class="modal" id="mealModal">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><strong>Wybierz posiłek</strong><div><button id="closeModal" class="btn ghost">Zamknij</button></div></div>
+  <div class="search-row"><input id="modalSearch" placeholder="Szukaj..." style="flex:1"/><select id="modalFilter"><option value="all">Wszystkie</option><option value="sniadania">Śniadania</option><option value="obiady">Obiady</option><option value="kolacje">Kolacje</option></select></div>
+  <div id="modalMeals"></div>
+</div>
+<script src="script.js"></script>
+<script>window.addEventListener('DOMContentLoaded',()=>{if(window.initPlanner) window.initPlanner({days:5});});</script>
+</body></html>

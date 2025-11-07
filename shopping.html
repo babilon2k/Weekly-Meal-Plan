@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="pl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lista zakupów — Plan Posiłków</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body>
+<nav class="topbar"><div class="brand">Plan Posiłków</div><div class="navlinks"><a href="meals.html">Meals Library</a><a href="planer.html">Weekly Planner</a><a href="shopping.html">Shopping List</a></div></nav>
+<main class="shop-wrap">
+  <h2>Lista zakupów</h2>
+  <div id="shopContent"><p class="small">Kliknij "Generuj listę zakupów" w planerze, aby zobaczyć listę tutaj. Plan jest zapisywany lokalnie.</p></div>
+</main>
+<script src="script.js"></script>
+<script>window.addEventListener('DOMContentLoaded',()=>{if(window.loadShoppingFromPlan) window.loadShoppingFromPlan();});</script>
+</body></html>
